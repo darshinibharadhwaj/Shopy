@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Shopy - Home{% endblock %}
+{% block content %}
+    <h1>{% if query %}Results for "{{ query }}"{% else %}All Products{% endif %}</h1>
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                <div class="product-image-placeholder">{{ product.name[:1] }}</div>
+                <h3>{{ product.name }}</h3>
+            </a>
+            <p class="price">${{ "%.2f"|format(product.price) }}</p>
+            <p class="stock">{{ product.stock }} in stock</p>
+            {% if user %}
+            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post">
+                <button type="submit" class="btn-add">Add to Cart</button>
+            </form>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn-add">Log in to buy</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <p>No products found.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
